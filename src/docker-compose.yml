@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aaa_app
+    restart: always
+    volumes:
+      - ./:/var/www
+    expose:
+      - "9000"
+    network_mode: bridge
+
+  web:
+    image: nginx:latest
+    container_name: aaa_web
+    restart: always
+    depends_on:
+      - app
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./:/var/www
+    environment:
+      - VIRTUAL_HOST=aaa.clickforce.asia
+      - VIRTUAL_PORT=80
+    expose:
+      - "80"
+    network_mode: bridge
